@@ -44,11 +44,13 @@ The variables can be split into two categories: demographics, and survey results
 
 ### Descriptive Information
 * Categorical
+
 ![image](https://user-images.githubusercontent.com/44247793/130680761-5996969c-d8b6-40c7-8a98-f5a5871ac375.png)
 
 Looking at the categorical variables, the data is skewed towards business flyers who are considered loyal customers and contains slightly more dissatisfied/neutral flyers than satisfied. The data set is almost evenly distributed in terms of gender.
 
 * Numeric
+
 * ![image](https://user-images.githubusercontent.com/44247793/130680834-7561e9d5-7998-4064-a043-2cabf98f4ad8.png)
 * 
 For numeric variables, we have mostly younger passengers in the data set, there are many passengers in their mid-20s to 30s. We have more data on relatively shorter flights in terms of distance and are heavily skewed to short arrival and departure delays. Looking at the survey answers, I can see off the bat that ease of online booking and inflight Wi-Fi service has relatively higher rates of low satisfaction than many other survey questions. 
@@ -107,11 +109,93 @@ For PAM clustering, I used the silhouette method to determine the best number of
 I will start with the supervised learning models. I will first discuss the findings from my stepwise logistic regression model, I will skip detailed explanation of the logistic regression model with all variables, because the results were very similar to the stepwise model, but it included some insignificant variables, and the accuracy was slightly lower. With stepwise logistic regression, the model kept many, but not all variables. Some variables it kept were customer type, age, type of travel, class, flight distance, inflight Wi-Fi service, ease of online booking, and online boarding ratings. Almost all values in the model were significant. When looking at the odds ratios, I saw the variables causing the highest likelihood of satisfaction were a one unit increase in the online boarding rating, a one unit increase in the inflight Wi-Fi rating, and a one unit increase in the check-in service rating. After checking the VIF, no variable had a score close to 5, so I felt confident that there wasn’t much redundancy in the model caused by highly correlated variables. When I ran the model on test data, the model was getting almost 87% accuracy in predicting customer satisfaction. In my opinion, the most important output of this model was understanding that one unit increases in certain ratings were linked to high chances of satisfaction. I wanted to start focusing on inflight Wi-Fi ratings and online boarding ratings for the rest of my analysis. 
 
 Stepwise logistic regression odds ratios:
+
 ![image](https://user-images.githubusercontent.com/44247793/130681633-82203b37-9261-4cd4-81d6-5686af7d0698.png)
 
 Stepwise VIF:
+
 ![image](https://user-images.githubusercontent.com/44247793/130681652-b79df6dd-7e50-4955-beb6-cad59a4e48b8.png)
 
 Stepwise confusion matrix and accuracy:
+
 ![image](https://user-images.githubusercontent.com/44247793/130681692-45db43da-cb4c-4257-bec1-4bf2e03794a4.png)
+
+### DecisionTree and Random Forest
+The decision tree model only used three variables in tree construction: inflight Wi-Fi service, online boarding, and type of travel. The first split was whether the online boarding rating was less than or greater than 4 out of 5. If their rating was greater than 4 and they were not a personal traveler (they were a business traveler), the model predicts they will be a satisfied customer. Like the stepwise logistic regression model, I’m starting to see a pattern that the online boarding and inflight Wi-Fi ratings are important variables for determining customer satisfaction. If the online boarding was greater than 4 and they were a personal traveler, it then splits on the inflight Wi-Fi rating, which if it was less than perfect, 5, the model predicts the customer will not be satisfied. I also ran a prediction on this model, which got 88% accuracy, but I didn’t put much weight into the accuracy rating as it could be overfitting, I’ll put more importance on random forest accuracy. I like the decision tree model due to its simplicity. In a presentation to management, I’d be able to put this visualization right into a power point and show which variables were the best indicators for predicting customer satisfaction. 
+
+Decision Tree:
+
+![image](https://user-images.githubusercontent.com/44247793/130682124-2bf068f5-882f-47dc-887c-b252bab25faf.png)
+
+Decision Tree Confusion Matrix + Accuracy:
+
+![image](https://user-images.githubusercontent.com/44247793/130682151-93053c80-5527-43ca-aa82-830ad11f0fd2.png)
+
+When running the random forest model, I got much higher accuracy, almost 96%. Since random forest runs many decision trees, it makes sense that it had higher accuracy, and I also have fewer concerns the model is overfitting. I couldn’t t plot a tree with the random forest model; however, I created a plot of the mean decrease accuracy, which measures the extent a variable improves the accuracy of predicting the outcome. And a I plotted the mean decrease Gini, which factors the contribution the variable makes to accuracy, and the degree of misclassification. Like previous supervised learning models suggested, online boarding and inflight Wi-Fi service ratings had the highest scores in both plots. 
+
+Random Forest mean decrease accuracy and mean decrease Gini
+
+![image](https://user-images.githubusercontent.com/44247793/130682200-712bc6b2-3f5a-4127-9f99-92adafb38f8f.png)
+
+Random Forest confusion matrix + accuracy
+
+![image](https://user-images.githubusercontent.com/44247793/130682229-4ee79ead-c2d7-45fe-acb2-05bd1e16e6b1.png)
+
+Of all the supervised learning models I ran, I’d recommend the random forest model if the airline wanted to create and operationalize a model to predict customer satisfaction. It had the highest accuracy of any of the models I ran, and I could clearly see which variables were important to the model. At this point, I felt confident that these two variables were important contributors to customer satisfaction. Next, I moved to clustering. 
+
+### PAM Clustering
+I ran both K-Means and PAM clustering originally but decided to only use PAM clustering and limit the data to demographic data. I did this because I wanted to create segments based off demographics, and then see how those segments rated inflight Wi-Fi and online boarding in their survey results. This way, the airline would know which demographics to push marketing campaigns to in the future. The reason I stuck with PAM was because many of the demographic data available were categorical variables that could be turned into factors, and PAM works well with factors. 
+
+When creating the silhouette plot to estimate the best number of clusters, the plot recommended 10 clusters. I felt this was too high and would be difficult to create segments for 10 different types of customers. The plot increased as cluster count increased, so I decided to go with 5 clusters. This was the highest number of segments I felt the airline would want to work with.
+
+Silhouette Chart
+
+![image](https://user-images.githubusercontent.com/44247793/130682281-2ce9cdc9-2a46-4ca1-988c-99780910acf3.png)
+
+After creating 5 clusters, the distribution of clusters was even across all clusters. I’ve summarized some of the clusters below:
+* Cluster 1: Cluster 1 contained all female passengers who were mostly considered loyal. These passengers fly business class and for business travel. They also flew the longest flights in terms of distance. This was the oldest cluster by age and had a high percentage of satisfied customers.
+* Cluster 2: Like cluster 1, cluster 2 was another cluster of all female, loyal passengers. However, this cluster mostly flew personal travel in economy class, was slightly younger in age, and had a high percentage of dissatisfied passengers.
+* Cluster 3: Cluster 3 was the only cluster with a mix of male and females. This was the youngest cluster by far and contained mostly disloyal customers who were travelling for business but flying economy. Customers in this cluster were mostly dissatisfied. 
+* Cluster 4: Customers in cluster 4 were all male, loyal customers flying for personal reasons in economy class. This cluster had a high percentage of dissatisfied customers.
+* Cluster 5: Cluster 5 was the opposite of cluster 4 in a few ways. These were still all male, loyal customers, but these customers were travelling for business purposes in business class and were mostly satisfied with their experience. Passengers in cluster 5 had an average flight distance more than 2x higher than cluster 4.
+
+Cluster Means
+
+![image](https://user-images.githubusercontent.com/44247793/130682338-6fbb73a1-c5a9-4b54-a9f1-c76dd98ed97e.png)
+
+Satisfaction by Cluster
+
+![image](https://user-images.githubusercontent.com/44247793/130682371-69a4ea18-d781-443c-8086-98cfc2a783d5.png)
+
+As I mentioned when describing the clusters, clusters 1 and 5 had the highest proportion of satisfied customers, 2-4 were more dissatisfied. Next, I compared each cluster to their most common ratings for Inflight Wi-Fi service and online boarding. My logistic regression, decision tree, and random forest models all suggested these were important variables that contributed to satisfaction. As we can see, clusters 2-4 had the highest proportion of 2- and 3-star ratings for both variables, while clusters 1 and 5 had a significantly higher proportion of 5-star ratings than the rest of the clusters. 
+
+![image](https://user-images.githubusercontent.com/44247793/130682396-ecc96d04-23df-4b3d-bc9c-ac4d9e36b476.png)
+
+![image](https://user-images.githubusercontent.com/44247793/130682411-f1b5adf6-f228-46c9-97f2-e8f4b10bd841.png)
+
+
+## Recommendations
+Overall, these models helped me put together concrete recommendations for the management team. It’s apparent that increases in inflight Wi-Fi service ratings and online boarding ratings positively contribute to customer satisfaction. These are two straightforward areas of the business where the airline should focus future improvements. There were also some unexpected findings, for example, I found it strange that the odds ratio in my logistic regression model showed a one unit increase in ratings contributed negatively to customer satisfaction, such as the online boarding experience and the convenience of the departure or arrival time.
+
+Service improvements and targeted campaigns for market segments
+1.	Our company needs to invest in improvements to our inflight Wi-Fi service. We may want to commission a survey specifically for Wi-Fi to understand which parts of the service are causing passengers to be dissatisfied, for example, is it the speed of the internet or the cost of the internet? 
+a.	After making improvements to the service, our airline needs to market the improvement to customers, so previously disloyal customers who were rated the service low may be tempted to try it again. I think customers that fit into cluster 3 are a unique customer that we should target our campaign to. Cluster 3 had younger, disloyal flyers who were flying for business purposes and were mostly dissatisfied with their experience. Business flyers were generally very satisfied with our airline, this cluster was the exception. So, the airline has a chance to turn these into loyal, satisfied customers. Since they are flying for business, they likely place a high importance on the Wi-Fi so they can work on their flight. Once we’ve made improvements to the service, I think we should target customers that fit into this “young, economy traveler for business purposes” segment and send them marketing ads promoting our new and improved inflight Wi-Fi. With these ads, we should offer them free Wi-Fi for one round-tip with our airline. This segment of customers may be willing to try our airline again and will be able to test the service for free, possibly increasing their satisfaction with the service and ultimately our airline. 
+b.	Lastly, the airline should offer a free 20 minutes of Wi-Fi to all passengers. This way, a passenger who was previously dissatisfied with the inflight Wi-Fi can try it again, and potentially adjust their personal rating of the service. 
+2.	Our company should invest in improvements in the online boarding experience. If we already have an online app that allows passengers to check in and get a boarding place in line in line, we should fund research to understand why passengers are unhappy, or happy, with this service. If this service currently doesn’t exist, we should invest R&D funds into a team to develop an app that would provide this service, since many airlines already provide this.
+a.	For surveys, we should target our surveys to customers that fit into cluster 1 for a couple of reasons. Cluster 1 was our cluster of loyal, female passengers flying for business purposes. Cluster 1 had the second highest percent of 5-star ratings for the service, we could ask detailed questions to understand why they were satisfied. Cluster 1, however, also had the highest percent of 1-star ratings, so targeting survey results to customers in this cluster may provide us a wide range of reasoning behind both satisfaction and dissatisfaction of the service.
+
+
+## Limitations
+### Insights about the limitations of the current dataset
+Some significant limitations of the data set are that it didn’t contain a lot of demographic data that could be used to create highly tailored market segments. I was able to create segments based on a customer’s age, and details on why they fly, but I couldn’t create segments based on the areas they live, the number of times they travel throughout the year, where they travel, etc. With more demographic data, I think I could create stronger market segments. 
+
+Also, the data simply provides one rating for each important factor of the flight; it doesn’t provide more detail than that. I can’t investigate what specifically about the Wi-Fi service that customers were unhappy with, or what aspects of the online boarding process customers were dissatisfied with.
+
+### Insights about the limitations of the current model and analysis methods
+As I mentioned, the data doesn’t provide much detail on why people are unhappy with certain services and giving them low ratings. Also, these two services had some of the lowest overall ratings, which could potentially be a contributing factor to why these services were important to determining satisfaction in the first place.
+
+### Plan for pursuing in the same directions
+While I believe the airline should make improvements to their Wi-Fi and online boarding offerings, they should collect more specific, detailed survey data on these two variables. I want to understand why customers are unhappy with the services, and what aspects of the service they are unhappy with. This would allow me to analyze reasons behind dissatisfaction of these services much deeper, and I could recommend the company to focus their development and improvement to areas of the service that truly need it or are worth it. 
+
+Additionally, adding a time series element to the data set could help future analyses. I could review customer satisfaction and customer survey ratings over time. If the airline makes changes to these services, we will want to track how ratings and satisfaction changes as these services are improved and new campaigns are rolled out to understand the effectiveness of the airline’s efforts. 
 
