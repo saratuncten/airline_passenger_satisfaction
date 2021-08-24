@@ -212,10 +212,7 @@ Some significant limitations of the data set are that it didn’t contain a lot 
 
 Also, the data simply provides one rating for each important factor of the flight; it doesn’t provide more detail than that. I can’t investigate what specifically about the Wi-Fi service that customers were unhappy with, or what aspects of the online boarding process customers were dissatisfied with.
 
-### Insights about the limitations of the current model and analysis methods
-As I mentioned, the data doesn’t provide much detail on why people are unhappy with certain services and giving them low ratings. Also, these two services had some of the lowest overall ratings, which could potentially be a contributing factor to why these services were important to determining satisfaction in the first place.
-
-### Plan for pursuing in the same directions
+### Recommendations or plans for future analysis
 While I believe the airline should make improvements to their Wi-Fi and online boarding offerings, they should collect more specific, detailed survey data on these two variables. I want to understand why customers are unhappy with the services, and what aspects of the service they are unhappy with. This would allow me to analyze reasons behind dissatisfaction of these services much deeper, and I could recommend the company to focus their development and improvement to areas of the service that truly need it or are worth it. 
 
 Additionally, adding a time series element to the data set could help future analyses. I could review customer satisfaction and customer survey ratings over time. If the airline makes changes to these services, we will want to track how ratings and satisfaction changes as these services are improved and new campaigns are rolled out to understand the effectiveness of the airline’s efforts. 
