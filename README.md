@@ -18,29 +18,50 @@ The data only had missing values in the Arrival Delay in Minutes column, I manip
 ### Key Variables
 The variables can be split into two categories: demographics, and survey results:
 * Demographics about the passenger and their flight
-  Gender: Male, Female
+
+  	Gender: Male, Female
+	
 	Customer Type: Loyal, Disloyal
+	
 	Age: Integer ranging from 7 to 85
+	
 	Type of Travel: Personal, Business
+	
 	Class: Eco, Eco Plus, Business
+	
 	Flight Distance: Integer ranging from 31 to 4,983
-  Departure Delay in Minutes: Integer ranging from 0 to 1,592
-  Arrival Delay in Minutes: Integer ranging from 0 to 1,584
+	
+  	Departure Delay in Minutes: Integer ranging from 0 to 1,592
+	
+  	Arrival Delay in Minutes: Integer ranging from 0 to 1,584
 * Survey Results: integers ranging from 0 (didn't answer question) to 5 (most satisfied)
-  Inflight Wi-Fi Service
+
+  	Inflight Wi-Fi Service
+	
 	Departure/Arrival Time Convenience
+	
 	Ease of Online booking
+	
 	Gate location
-	Food and drink	
-  Online boarding	
-  Seat comfort	
-  Inflight entertainment	
-  On-board service	
-  Leg room service	
-  Baggage handling	
-  Check-in service	
-  Inflight Service	
-  Cleanliness
+	
+	Food and drink
+	
+	Online boarding
+  	Seat comfort
+	
+	Inflight entertainment
+	
+	On-board service
+	
+	Leg room service
+	
+	Baggage handling 
+	
+	Check-in service 
+	
+	Inflight Service
+	
+	Cleanliness
 
 ### Descriptive Information
 * Categorical
@@ -51,8 +72,8 @@ Looking at the categorical variables, the data is skewed towards business flyers
 
 * Numeric
 
-* ![image](https://user-images.githubusercontent.com/44247793/130680834-7561e9d5-7998-4064-a043-2cabf98f4ad8.png)
-* 
+![image](https://user-images.githubusercontent.com/44247793/130680834-7561e9d5-7998-4064-a043-2cabf98f4ad8.png)
+
 For numeric variables, we have mostly younger passengers in the data set, there are many passengers in their mid-20s to 30s. We have more data on relatively shorter flights in terms of distance and are heavily skewed to short arrival and departure delays. Looking at the survey answers, I can see off the bat that ease of online booking and inflight Wi-Fi service has relatively higher rates of low satisfaction than many other survey questions. 
 
 ![image](https://user-images.githubusercontent.com/44247793/130680878-f5be93a6-a022-4983-ada3-74403dd2bd49.png)
