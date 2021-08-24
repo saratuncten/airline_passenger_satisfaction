@@ -1,0 +1,60 @@
+---
+title: "EDA and Cleaning_Airline Passenger Satisfaction"
+date: 4/25/2021
+output: html_notebook
+---
+
+```{r}
+library("corrplot")
+library("FactoMineR")
+library("factoextra")
+library("DataExplorer")
+library("compareGroups")
+```
+# Import Data
+
+```{r}
+#read test and train
+train <- read.csv("train.csv")
+test <- read.csv("test.csv")
+
+#random sample train data set, limit to 15,000 rows
+set.seed(200)
+train <- train[sample(nrow(train), 15000),]
+
+#combine into one DF for non-supervised learning models
+df <- rbind(train,test)
+
+#remove id columns as they aren't needed for prediction
+train <- train[,-1]
+test <- test[,-1]
+df <- df[,-1]
+
+#check dimensions
+dim(train)
+dim(test)
+dim(df)
+```
+
+# EDA
+```{r}
+str(df)
+summary(df)
+```
+
+```{r}
+corrplot(cor(df[,c(3,6:22)]), type='lower')
+```
+
+```{r}
+plot_intro(train, ggtheme=theme_minimal())
+plot_histogram(train, ggtheme=theme_minimal())
+plot_bar(train,ggthem=theme_minimal())
+```
+There are some missing values in the Arrival delay column, I will fill these with the median value, which is 0
+
+```{r}
+df$Arrival.Delay.in.Minutes[is.na(df$Arrival.Delay.in.Minutes)] <- 0 
+test$Arrival.Delay.in.Minutes[is.na(test$Arrival.Delay.in.Minutes)] <- 0 
+train$Arrival.Delay.in.Minutes[is.na(train$Arrival.Delay.in.Minutes)] <- 0 
+```
